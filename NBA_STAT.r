@@ -1,2 +1,2 @@
 devtools::install_github("abresler/nbastatR")
-library("nbastatR")
+library("nbastatR")ijda;doisn
