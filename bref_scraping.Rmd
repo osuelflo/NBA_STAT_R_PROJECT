@@ -1,0 +1,50 @@
+---
+title: "basketball reference scraping"
+author: "Jonah Klein-Collins"
+date: "2022-11-04"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+#Library Statements
+library(RSelenium)
+library(dplyr)
+library(tidyverse)
+library(rvest)
+library(netstat)
+library(data.table)
+```
+```{r}
+rs_driver_object = rsDriver(browser = "chrome",
+                            chromever = "107.0.5304.62",
+                            verbose = F,
+                            port = free_port())
+
+remDr <- rs_driver_object$client
+
+remDr$open()
+remDr$navigate("https://www.basketball-reference.com/leagues/NBA_2023_advanced.html")
+
+data_table = remDr$findElement(using = 'id', 'advanced_stats')
+
+data_table_html = data_table$getPageSource()
+  page = read_html(data_table_html %>%
+    unlist()) #unlist so it can be read properly
+
+  df = html_table(page) #the %>% .[[2]] just indexes a single object in the list of lists - we want the objects in the second list, not just the second list!!
+  #add df to the list of all data
+  all_data <- rbindlist(list(df))
+
+View(df[[11]])
+
+adv_stats <- df[[11]]
+
+adv_stats <- adv_stats %>% 
+  filter(Player != "Player")
+
+```
+
