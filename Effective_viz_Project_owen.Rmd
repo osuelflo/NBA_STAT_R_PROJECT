@@ -1,0 +1,72 @@
+---
+title: "Effective_Viz_Project"
+author: "Owen Suelflow"
+date: "2022-11-14"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+library(ggplot2)
+```
+
+```{r}
+Current_Salary_Data_2022 <- Current_Salary_Data %>% 
+  mutate(Rk = ...1) %>% 
+  mutate(Player = ...2) %>% 
+  mutate(Tm = ...3) %>% 
+  mutate(Salary_2022_2023 = Salary...4) %>% 
+  select(Rk, Player, Tm, Salary_2022_2023, ) %>% 
+  filter(Rk != "Rk") %>% 
+  mutate(Salary_2022_2023 = as.numeric(str_replace(Salary_2022_2023, "[$]", "")))
+Current_Salary_Data_2022 <- Current_Salary_Data_2022 %>%
+  select(!Rk)
+Stats_Salary_2022 <- X2021_2022_Advanced_Stats %>% left_join(Current_Salary_Data_2022)
+OWS_DWS_2022 <- Stats_Salary_2022 %>% 
+  filter(!is.na(Salary_2022_2023)) %>% 
+  select(Player, Pos, Tm, Age, OWS, DWS, Salary_2022_2023)
+
+OWS_DWS_2022_PG <-  OWS_DWS_2022 %>% 
+  filter(Pos == "PG") %>% 
+  group_by(Player) %>% 
+  summarize(Tm = Tm, Age = Age, OWS = sum(OWS), DWS = sum(DWS), Salary_2022_2023 = Salary_2022_2023)
+OWS_DWS_2022_PG <- OWS_DWS_2022_PG %>% 
+  filter(!(Player == "Jevon Carter" && Tm == "BRK"))
+OWS_DWS_2022_PG <- OWS_DWS_2022_PG %>% 
+  separate(Player, c("First_Name", "Last_Name"), sep = " ") %>% 
+  mutate(First_Name_Initial = substr(First_Name, 1, 1)) %>% 
+  mutate(Player = paste(First_Name_Initial, ". ", Last_Name, sep = ""))
+```
+
+
+
+```{r}
+ p <- ggplot(OWS_DWS_2022_PG, aes(x = OWS, y = DWS, size = Age, label = Player)) +
+  geom_point() +
+  geom_vline(xintercept = median(OWS_DWS_2022_PG$OWS)) +
+  geom_hline(yintercept = median(OWS_DWS_2022_PG$DWS)) +
+  annotate(geom = "text", y = 0.5, label = "Skilled Offensive Player", size = 4, x = 5.5) +
+  annotate(geom = "text", y = 0.5, label = "Garbage", size = 4, x = -1.5) +
+  annotate(geom = "text", y = 3, label = "Defensive Specialist", size = 4, x = -1) +
+  annotate(geom = "text", y = 2.7, label = "Superstar", size = 4, x = 7) +
+  labs(x = "Offensive Win Shares", y = "Defensive Win Shares", title = "Win Shares By Salary For Point Guards", size = "Age", subtitle = "Median Value is the Origin")
+  # if(OWS_DWS_2022_PG$OWS > 3 || 
+  #    OWS_DWS_2022_PG$OWS < -0.75 || 
+  #    OWS_DWS_2022_PG$DWS > 2 || 
+  #    OWS_DWS_2022_PG$DWS < 0.2){
+  #   p + geom_text(hjust = 0, vjust = 0)
+  # }else{
+  #   p
+  # }
+  
+  p
+```
+
+
+
+
+
