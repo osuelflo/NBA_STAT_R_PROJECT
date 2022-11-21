@@ -12,6 +12,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r}
 library(tidyverse)
 library(ggplot2)
+library(plotly)
 ```
 
 ```{r}
@@ -45,15 +46,16 @@ OWS_DWS_2022_PG <- OWS_DWS_2022_PG %>%
 
 
 ```{r}
- p <- ggplot(OWS_DWS_2022_PG, aes(x = OWS, y = DWS, size = Age, label = Player)) +
+ p <- ggplot(OWS_DWS_2022_PG, aes(x = OWS, y = DWS, size = Salary_2022_2023, label = Player)) +
   geom_point() +
   geom_vline(xintercept = median(OWS_DWS_2022_PG$OWS)) +
   geom_hline(yintercept = median(OWS_DWS_2022_PG$DWS)) +
-  annotate(geom = "text", y = 0.5, label = "Skilled Offensive Player", size = 4, x = 5.5) +
-  annotate(geom = "text", y = 0.5, label = "Garbage", size = 4, x = -1.5) +
-  annotate(geom = "text", y = 3, label = "Defensive Specialist", size = 4, x = -1) +
-  annotate(geom = "text", y = 2.7, label = "Superstar", size = 4, x = 7) +
-  labs(x = "Offensive Win Shares", y = "Defensive Win Shares", title = "Win Shares By Salary For Point Guards", size = "Age", subtitle = "Median Value is the Origin")
+  annotate(geom = "text", y = 0.5, label = "Skilled Offensive Player", size = 4, x = 6, color = "red") +
+  annotate(geom = "text", y = 0.5, label = "Poor", size = 4, x = -1.5, color = "red") +
+  annotate(geom = "text", y = 3, label = "Defensive Specialist", size = 4, x = -1, color = "red") +
+  annotate(geom = "text", y = 3.1, label = "Superstar", size = 4, x = 8, color = "red") +
+  labs(x = "Offensive Win Shares", y = "Defensive Win Shares", title = "Win Shares By Salary For Point Guards", size = "2022 Salary", subtitle = "Median Value is the Origin") +
+  geom_text(hjust = 0, vjust = 0, check_overlap = TRUE)
   # if(OWS_DWS_2022_PG$OWS > 3 || 
   #    OWS_DWS_2022_PG$OWS < -0.75 || 
   #    OWS_DWS_2022_PG$DWS > 2 || 
@@ -62,7 +64,6 @@ OWS_DWS_2022_PG <- OWS_DWS_2022_PG %>%
   # }else{
   #   p
   # }
-  
   p
 ```
 
