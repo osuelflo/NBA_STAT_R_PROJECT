@@ -11,6 +11,55 @@ library(tidyverse)
 library(ggplot2)
 ```
 
+```{r}
+# Import the Data
+Hustle <- read_csv("/Users/owensuelflow/Documents/COMP_127/NBA_STAT_R_PROJECT/projectdata/hustle.csv")
+Boxouts <- read_csv("/Users/owensuelflow/Documents/COMP_127/NBA_STAT_R_PROJECT/projectdata/boxouts.csv")
+Drives <- read_csv("/Users/owensuelflow/Documents/COMP_127/NBA_STAT_R_PROJECT/projectdata/drives.csv")
+playoff_status <- read_csv("/Users/owensuelflow/Documents/COMP_127/NBA_STAT_R_PROJECT/playoff_status.csv")
+nba_advanced_data_4_Sheet1 <- read_csv("/Users/owensuelflow/Documents/COMP_127/NBA_STAT_R_PROJECT/nba advanced data-4 - Sheet1.csv")
+
+
+Hustle <- Hustle %>%
+  mutate(ScreenAssistsPTS = `ScreenAssists PTS`,
+         OffLooseBallsRecovered = `OFF Loose BallsRecovered`,
+         DefLooseBallsRecovered = `DEF Loose BallsRecovered`,
+         LooseBallsRecovered = `Loose BallsRecovered`,
+         PercLooseBallsRecoveredOff = `% Loose BallsRecovered OFF`,
+         PercLooseBallsRecoveredDef = `% Loose BallsRecovered DEF`,
+         Contested2PtShots = `Contested2PT Shots`,
+         Contested3PtShots = `Contested3PT Shots`) %>%
+  select(TEAM,
+         Min,
+         ScreenAssists,
+         ScreenAssistsPTS,
+         Deflections,
+         OffLooseBallsRecovered,
+         DefLooseBallsRecovered,
+         LooseBallsRecovered,
+         PercLooseBallsRecoveredOff,
+         PercLooseBallsRecoveredDef,
+         ChargesDrawn,
+         ContestedShots,
+         Contested2PtShots,
+         Contested3PtShots)
+Hustle <- Hustle %>% mutate(W = Drives$W)
+Boxouts <- Boxouts %>% mutate(BoxOuts = `Box Outs`,
+                   OffBoxOuts = `OFF Box Outs`,
+                   DefBoxOuts = `DEF Box Outs`,
+                   PercBoxOutsOff = `% Box Outs Off`,
+                   PercBoxOutsDef = `% Box Outs Def`,
+                   W = Drives$W) %>%
+  select(Team, Min, BoxOuts, OffBoxOuts, DefBoxOuts, PercBoxOutsOff, PercBoxOutsDef, W)
+
+Boxouts <- Boxouts %>% mutate(LooseBalls = Hustle$LooseBallsRecovered)
+Boxouts <- Boxouts %>% mutate(Playoffs = playoff_status$Playoffs)
+nba_advanced_data_4_Sheet1 <- nba_advanced_data_4_Sheet1 %>% 
+  arrange(Team)
+Boxouts <- Boxouts %>% mutate(Avg_Team_Age = nba_advanced_data_4_Sheet1$Age)
+```
+
+
 ## Intro
 Add text to each section, using different fonts, bold, etc. if needed.
 
@@ -25,7 +74,16 @@ Add text to each section, using different fonts, bold, etc. if needed.
 ## Jonah Viz 2
 
 ```{r, echo=FALSE, warning = FALSE, message=FALSE}
-
+transitions %>% 
+  left_join(playoff_status, by = c("TEAM" = "Team")) %>% 
+  left_join(touches[,1:3]) %>% 
+  ggplot(aes(x = `FREQ%`, y = PPP, color = Playoffs))+
+  geom_point(size = 3)+
+  scale_color_manual(values = c("brown", "darkgoldenrod2", "chartreuse4"))+
+  theme_classic()+
+  geom_hline(yintercept = 1.135, alpha = .2)+
+  annotate(geom = "text", x = 17.5, y = 1.138, label = "Cutoff Line", size = 2, alpha = .2)+
+  labs(y = "Points Per Play", x = "Transition Frequency", title = "Transition Frequency, Efficiency, and Playoff Status")
 ```
 
 ## Owen Viz 1
