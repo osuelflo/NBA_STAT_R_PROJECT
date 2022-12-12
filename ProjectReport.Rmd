@@ -149,8 +149,9 @@ nba_advanced_data4 <- nba_advanced_data3 %>%
 
 nba_advanced_data4 %>% 
 select(Team,Age,W,Playoffs) %>% 
-  ggplot(aes(x=Age,y=W))+geom_text(aes(label=Team, color = Playoffs), size=2)+geom_point()+geom_smooth(se=FALSE,method="gam")+
-  scale_color_manual(values = c("brown", "darkgoldenrod2" , "chartreuse4"))
+  ggplot(aes(x=Age,y=W))+geom_text(aes(label=Team, color = Playoffs), size=2)+geom_smooth(se=FALSE,method="gam")+xlim(21,32)+
+  scale_color_manual(values = c("brown", "darkgoldenrod2" , "chartreuse4"))+
+  theme_classic()
 ```
 
 ## Harry Viz 2
@@ -161,8 +162,8 @@ nba_advanced_data4 <- nba_advanced_data3 %>%
 
 nba_advanced_data4 %>% 
 select(Team,Age,ORtg,Playoffs) %>% 
-  ggplot(aes(x=Age,y=ORtg))+geom_text(aes(label=Team, color = Playoffs), size=2)+geom_point()+geom_smooth(se=FALSE,method = "gam")+
-  scale_color_manual(values = c("brown", "darkgoldenrod2" , "chartreuse4"))
+  ggplot(aes(x=Age,y=ORtg))+geom_text(aes(label=Team, color = Playoffs), size=2)+geom_smooth(se=FALSE,method = "gam")+xlim(21,32)+
+  scale_color_manual(values = c("brown", "darkgoldenrod2" , "chartreuse4"))+theme_classic()
 ```
 
 ## Ethan Viz 1
