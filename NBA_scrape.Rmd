@@ -1,0 +1,132 @@
+---
+title: "NBA_scrape"
+author: "Jonah Klein-Collins"
+date: "2022-11-18"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(RSelenium)
+library(dplyr)
+library(tidyverse)
+library(rvest)
+library(netstat)
+library(data.table)
+```
+```{r}
+rs_driver_object = rsDriver(browser = "chrome",
+                            chromever = "107.0.5304.62",
+                            verbose = F,
+                            port = free_port())
+
+#access client-side
+remDr <- rs_driver_object$client
+
+remDr$open() 
+remDr$navigate("https://www.nba.com/stats/teams/ball-handler?SeasonYear=2021-22")
+# Pick and Roll Handler
+data_table = remDr$findElement(using = 'class', 'Crom_table__p1iZz')
+
+data_table_html = data_table$getPageSource()
+  page = read_html(data_table_html %>%
+    unlist()) #unlist so it can be read properly
+
+  df = html_table(page)
+  p_r_handler <- df[[1]]
+  
+# Get Roller
+remDr$navigate("https://www.nba.com/stats/teams/roll-man?SeasonYear=2021-22")
+data_table = remDr$findElement(using = 'class', 'Crom_table__p1iZz')
+data_table_html = data_table$getPageSource()
+  page = read_html(data_table_html %>%
+    unlist()) #unlist so it can be read properly
+
+  df = html_table(page)
+  p_r_roller <- df[[1]]
+  
+# Isolation
+remDr$navigate("https://www.nba.com/stats/teams/isolation?SeasonYear=2021-22")
+data_table = remDr$findElement(using = 'class', 'Crom_table__p1iZz')
+data_table_html = data_table$getPageSource()
+  page = read_html(data_table_html %>%
+    unlist()) #unlist so it can be read properly
+
+  df = html_table(page)
+  iso <- df[[1]]
+
+# Transition
+remDr$navigate("https://www.nba.com/stats/teams/transition?SeasonYear=2021-22")
+data_table = remDr$findElement(using = 'class', 'Crom_table__p1iZz')
+data_table_html = data_table$getPageSource()
+  page = read_html(data_table_html %>%
+    unlist()) #unlist so it can be read properly
+
+  df = html_table(page)
+  trans <- df[[1]] 
+
+# Drives
+remDr$navigate("https://www.nba.com/stats/teams/drives?Season=2021-22")
+data_table = remDr$findElement(using = 'class', 'Crom_table__p1iZz')
+data_table_html = data_table$getPageSource()
+  page = read_html(data_table_html %>%
+    unlist()) #unlist so it can be read properly
+
+  df = html_table(page)
+  drives <- df[[3]]
+  
+# Passing
+remDr$navigate("https://www.nba.com/stats/teams/passing?Season=2021-22")
+data_table = remDr$findElement(using = 'class', 'Crom_table__p1iZz')
+data_table_html = data_table$getPageSource()
+  page = read_html(data_table_html %>%
+    unlist()) #unlist so it can be read properly
+
+  df = html_table(page)
+  passes <- df[[3]]
+  
+# Touches
+remDr$navigate("https://www.nba.com/stats/teams/touches?Season=2021-22")
+data_table = remDr$findElement(using = 'class', 'Crom_table__p1iZz')
+data_table_html = data_table$getPageSource()
+  page = read_html(data_table_html %>%
+    unlist()) #unlist so it can be read properly
+
+  df = html_table(page)
+  touches <- df[[3]]
+  
+# Hustle
+remDr$navigate("https://www.nba.com/stats/teams/hustle?Season=2021-22")
+data_table = remDr$findElement(using = 'class', 'Crom_table__p1iZz')
+data_table_html = data_table$getPageSource()
+  page = read_html(data_table_html %>%
+    unlist()) #unlist so it can be read properly
+
+  df = html_table(page)
+  hustle <- df[[3]]
+
+# Box-Outs
+remDr$navigate("https://www.nba.com/stats/teams/box-outs?Season=2021-22")
+data_table = remDr$findElement(using = 'class', 'Crom_table__p1iZz')
+data_table_html = data_table$getPageSource()
+  page = read_html(data_table_html %>%
+    unlist()) #unlist so it can be read properly
+
+  df = html_table(page)
+  boxouts <- df[[3]]
+```
+```{r}
+#write CSVs
+write_csv(p_r_handler, file = "p_r_handler.csv")
+write_csv(p_r_roller, file = "p_r_roller.csv")
+write_csv(trans, file = "transitions.csv")
+write_csv(drives, file = "drives.csv")
+write_csv(touches, file = "touches.csv")
+write_csv(passes, file = "passes.csv")
+write_csv(hustle, file = "hustle.csv")
+write_csv(boxouts, file = "boxouts.csv")
+```
+
