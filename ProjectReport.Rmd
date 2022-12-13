@@ -80,7 +80,7 @@ Transitions %>%
 
 ## Owen Viz 1
 
-
+While there is not a correlation between having lots of transition opportunities and winning, there are other hustle-related statistics that do show a positive correlation to winning. The visualization below shows that playoff/play-in teams tend to win more loose balls and execute more box outs per game than teams who did not make the playoffs. Another interesting trend that we noticed was that a lot of the teams that performed well in these statistics were older. The Miami Heat, for example are one of the oldest teams in the NBA, yet they led the league in box outs. This trend shows up throughout the plot. It could be because older teams are more experienced and generally of higher quality, as we will show later on. These teams know what it takes to win, and oftentimes that means honing in on the smaller details of the games. On the flip side, younger teams generally lose more games, and they aren't disciplined enough to hustle after loose balls or get a body on somebody and get a rebound. Furthermore, these young teams don't have the chemistry and team culture like a team such as the Miami Heat. Overall, it is clear that winning teams prioritize hustle and sound defense, and that experienced teams know these things are crucial to win games in the NBA.
 
 ```{r, echo=FALSE, warning = FALSE, message=FALSE}
 ggplot(Boxouts, aes(x = BoxOuts, y = LooseBalls, color = Playoffs, size = Avg_Team_Age)) +
