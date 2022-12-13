@@ -45,15 +45,21 @@ Boxouts <- Boxouts %>% mutate(Avg_Team_Age = nba_advanced_data_4_Sheet1$Age)
 
 ## Intro
 
-This report will examine NBA (National Basketball Association) play style data and roster construction to try and answer the following questions: What tendencies and characteristics do playoff teams have? What patterns begin to emerge? The majority of our data was scraped directly off of NBA.com, while a few data sets were downloaded from basketball-reference.com. One thing that we had to be careful of was drawing conclusions based off of reverse causality. This concept occurs when comparing two or more variables that influence one another. For example, comparing point differential among NBA teams, meaning the difference between the average points scored and points given up, and the number of wins each team had. This would show us a clear trend of teams with a higher point differential having more wins. However, by definition a win occurs when a team scores more points than its opponent, so both of out variables in this scenario depend on each other. These are the types of conclusions we strived to avoid. 
+This report will examine NBA (National Basketball Association) play style data and roster construction to try and answer the following questions: What tendencies and characteristics do playoff teams have? What patterns begin to emerge? One thing that we had to be careful of was drawing conclusions based off of reverse causality. This concept occurs when comparing two or more variables that influence one another. For example, comparing point differential among NBA teams, meaning the difference between the average points scored and points given up, and the number of wins each team had. This would show us a clear trend of teams with a higher point differential having more wins. However, by definition a win occurs when a team scores more points than its opponent, so both of out variables in this scenario depend on each other. These are the types of conclusions we strived to avoid. 
 
 The nice thing about play style in the NBA is that different teams have different philosophies regarding how they play. We wanted to look at data that showed a "choice" a team made on how to play. For example, a team can choose to take more drives during a game. On the other hand, a team could decide to avoid driving into the paint and place more of an emphasis on shooting 3 point shots. These types of data do not have reverse causality with wins. 
 
 For roster construction, the line regarding reverse causality is a bit more blurred. Teams may not have a choice between two options when building a team; depending on if a team is contending or rebuilding, they will likely have only one path to follow. However, it is still important to look at roster construction as a tool to follow how teams are doing. We can see if a team that is contending is actually where it should be, or if they should consider pivoting into a rebuild.
 
+The majority of our data was scraped directly off of NBA.com, while a few data sets were downloaded from basketball-reference.com. You can find the code used to scrape the data in the appendix at the end of this report.
+
 ## Shiny App
 
-To begin, we performed exploratory data analysis using a shiny app. The app only focused on play style data from eight different data sets, each focusing on one aspect of a game. We were able to choose which data set to look at, and then choose a variable to plot against team wins. This way, we could see if there were any variables with a strong correlation to winning. Here is a link to the shiny app:
+To begin, we performed exploratory data analysis using a shiny app. The app only focused on play style data from eight different data sets, each focusing on one aspect of a game. 
+
+NEED TO ADD: Brief Description of each data set in the app we used in order to contextualize the report
+
+We were able to choose which data set to look at, and then choose a variable to plot against team wins. This way, we could see if there were any variables with a strong correlation to winning. Here is a link to the shiny app:
 
 https://rstudio-connect.macalester.edu/content/ce590312-5b40-4e4c-84a9-30ff6e7b5a56
 
@@ -93,6 +99,8 @@ ggplot(Boxouts, aes(x = BoxOuts, y = LooseBalls, color = Playoffs, size = Avg_Te
 
 ## Harry Viz 1
 
+INCLUDE: Context of data harry used
+
 ```{r, echo=FALSE, warning = FALSE, message=FALSE}
 nba_advanced_data5 <- nba_advanced_data_4_Sheet1 %>% 
   left_join(playoff_status) 
@@ -106,6 +114,8 @@ select(Team,Age,W,Playoffs) %>%
 
 ## Harry Viz 2
 
+INCLUDE: Context of data harry used
+
 ```{r, echo=FALSE, warning = FALSE, message=FALSE}
 nba_advanced_data5 %>% 
 select(Team,Age,ORtg,Playoffs) %>% 
@@ -115,17 +125,23 @@ select(Team,Age,ORtg,Playoffs) %>%
 
 ## Ethan Viz 1
 
+INCLUDE: Context of data Ethan used
+
 ```{r, echo=FALSE, warning = FALSE, message=FALSE}
 
 ```
 
 ## Ethan Viz 2
 
+INCLUDE: Context of data Ethan used
+
 ```{r, echo=FALSE, warning = FALSE, message=FALSE}
 
 ```
 
 ## Ethan Viz 3
+
+INCLUDE: Context of data Ethan used
 
 ```{r, echo=FALSE, warning = FALSE, message=FALSE}
 
