@@ -55,6 +55,8 @@ For roster construction, the line regarding reverse causality is a bit more blur
 
 To begin, we performed exploratory data analysis using a shiny app. The app only focused on play style data from eight different data sets, each focusing on one aspect of a game. We were able to choose which data set to look at, and then choose a variable to plot against team wins. This way, we could see if there were any variables with a strong correlation to winning. Here is a link to the shiny app:
 
+https://rstudio-connect.macalester.edu/content/ce590312-5b40-4e4c-84a9-30ff6e7b5a56
+
 ## Jonah Viz 1
 
 ```{r, echo=FALSE, warning = FALSE, message=FALSE}
