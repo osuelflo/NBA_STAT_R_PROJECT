@@ -11,49 +11,32 @@ library(tidyverse)
 library(ggplot2)
 ```
 
-```{r}
+```{r, echo=FALSE, warning = FALSE, message=FALSE}
 # Import the Data
 Hustle <- read_csv("/Users/owensuelflow/Documents/COMP_127/NBA_STAT_R_PROJECT/projectdata/hustle.csv")
 Boxouts <- read_csv("/Users/owensuelflow/Documents/COMP_127/NBA_STAT_R_PROJECT/projectdata/boxouts.csv")
 Drives <- read_csv("/Users/owensuelflow/Documents/COMP_127/NBA_STAT_R_PROJECT/projectdata/drives.csv")
 playoff_status <- read_csv("/Users/owensuelflow/Documents/COMP_127/NBA_STAT_R_PROJECT/playoff_status.csv")
 nba_advanced_data_4_Sheet1 <- read_csv("/Users/owensuelflow/Documents/COMP_127/NBA_STAT_R_PROJECT/nba advanced data-4 - Sheet1.csv")
+Passes <- read_csv("/Users/owensuelflow/Documents/COMP_127/NBA_STAT_R_PROJECT/projectdata/passes.csv")
+PnR_Handler <- read_csv("/Users/owensuelflow/Documents/COMP_127/NBA_STAT_R_PROJECT/projectdata/p_r_handler.csv")
+PnR_Roller <- read_csv("/Users/owensuelflow/Documents/COMP_127/NBA_STAT_R_PROJECT/projectdata/p_r_roller.csv")
+Transitions <- read_csv("/Users/owensuelflow/Documents/COMP_127/NBA_STAT_R_PROJECT/projectdata/transitions.csv")
+Salary <- read_csv("/Users/owensuelflow/Downloads/IndividualTeamsdata.csv")
+Touches <- read_csv("/Users/owensuelflow/Documents/COMP_127/NBA_STAT_R_PROJECT/projectdata/touches.csv")
+
 
 
 Hustle <- Hustle %>%
-  mutate(ScreenAssistsPTS = `ScreenAssists PTS`,
-         OffLooseBallsRecovered = `OFF Loose BallsRecovered`,
-         DefLooseBallsRecovered = `DEF Loose BallsRecovered`,
-         LooseBallsRecovered = `Loose BallsRecovered`,
-         PercLooseBallsRecoveredOff = `% Loose BallsRecovered OFF`,
-         PercLooseBallsRecoveredDef = `% Loose BallsRecovered DEF`,
-         Contested2PtShots = `Contested2PT Shots`,
-         Contested3PtShots = `Contested3PT Shots`) %>%
-  select(TEAM,
-         Min,
-         ScreenAssists,
-         ScreenAssistsPTS,
-         Deflections,
-         OffLooseBallsRecovered,
-         DefLooseBallsRecovered,
-         LooseBallsRecovered,
-         PercLooseBallsRecoveredOff,
-         PercLooseBallsRecoveredDef,
-         ChargesDrawn,
-         ContestedShots,
-         Contested2PtShots,
-         Contested3PtShots)
-Hustle <- Hustle %>% mutate(W = Drives$W)
-Boxouts <- Boxouts %>% mutate(BoxOuts = `Box Outs`,
-                   OffBoxOuts = `OFF Box Outs`,
-                   DefBoxOuts = `DEF Box Outs`,
-                   PercBoxOutsOff = `% Box Outs Off`,
-                   PercBoxOutsDef = `% Box Outs Def`,
-                   W = Drives$W) %>%
-  select(Team, Min, BoxOuts, OffBoxOuts, DefBoxOuts, PercBoxOutsOff, PercBoxOutsDef, W)
-
-Boxouts <- Boxouts %>% mutate(LooseBalls = Hustle$LooseBallsRecovered)
-Boxouts <- Boxouts %>% mutate(Playoffs = playoff_status$Playoffs)
+  mutate(LooseBallsRecovered = `Loose BallsRecovered`)
+Hustle <- Hustle %>% 
+  mutate(W = Drives$W)
+Boxouts <- Boxouts %>% 
+  mutate(BoxOuts = `Box Outs`)
+Boxouts <- Boxouts %>% 
+  mutate(LooseBalls = Hustle$LooseBallsRecovered)
+Boxouts <- Boxouts %>% 
+  mutate(Playoffs = playoff_status$Playoffs)
 nba_advanced_data_4_Sheet1 <- nba_advanced_data_4_Sheet1 %>% 
   arrange(Team)
 Boxouts <- Boxouts %>% mutate(Avg_Team_Age = nba_advanced_data_4_Sheet1$Age)
@@ -61,9 +44,16 @@ Boxouts <- Boxouts %>% mutate(Avg_Team_Age = nba_advanced_data_4_Sheet1$Age)
 
 
 ## Intro
-Add text to each section, using different fonts, bold, etc. if needed.
+
+This report will examine NBA (National Basketball Association) play style data and roster construction to try and answer the following questions: What tendencies and characteristics do playoff teams have? What patterns begin to emerge? The majority of our data was scraped directly off of NBA.com, while a few data sets were downloaded from basketball-reference.com. One thing that we had to be careful of was drawing conclusions based off of reverse causality. This concept occurs when comparing two or more variables that influence one another. For example, comparing point differential among NBA teams, meaning the difference between the average points scored and points given up, and the number of wins each team had. This would show us a clear trend of teams with a higher point differential having more wins. However, by definition a win occurs when a team scores more points than its opponent, so both of out variables in this scenario depend on each other. These are the types of conclusions we strived to avoid. 
+
+The nice thing about play style in the NBA is that different teams have different philosophies regarding how they play. We wanted to look at data that showed a "choice" a team made on how to play. For example, a team can choose to take more drives during a game. On the other hand, a team could decide to avoid driving into the paint and place more of an emphasis on shooting 3 point shots. These types of data do not have reverse causality with wins. 
+
+For roster construction, the line regarding reverse causality is a bit more blurred. Teams may not have a choice between two options when building a team; depending on if a team is contending or rebuilding, they will likely have only one path to follow. However, it is still important to look at roster construction as a tool to follow how teams are doing. We can see if a team that is contending is actually where it should be, or if they should consider pivoting into a rebuild.
 
 ## Shiny App
+
+To begin, we performed exploratory data analysis using a shiny app. The app only focused on play style data from eight different data sets, each focusing on one aspect of a game. We were able to choose which data set to look at, and then choose a variable to plot against team wins. This way, we could see if there were any variables with a strong correlation to winning. Here is a link to the shiny app:
 
 ## Jonah Viz 1
 
@@ -74,9 +64,9 @@ Add text to each section, using different fonts, bold, etc. if needed.
 ## Jonah Viz 2
 
 ```{r, echo=FALSE, warning = FALSE, message=FALSE}
-transitions %>% 
+Transitions %>% 
   left_join(playoff_status, by = c("TEAM" = "Team")) %>% 
-  left_join(touches[,1:3]) %>% 
+  left_join(Touches[,1:3]) %>% 
   ggplot(aes(x = `FREQ%`, y = PPP, color = Playoffs))+
   geom_point(size = 3)+
   scale_color_manual(values = c("brown", "darkgoldenrod2", "chartreuse4"))+
@@ -88,66 +78,24 @@ transitions %>%
 
 ## Owen Viz 1
 
+
+
 ```{r, echo=FALSE, warning = FALSE, message=FALSE}
-Hustle <- read_csv("/Users/owensuelflow/Documents/COMP_127/NBA_STAT_R_PROJECT/projectdata/hustle.csv")
-Boxouts <- read_csv("/Users/owensuelflow/Documents/COMP_127/NBA_STAT_R_PROJECT/projectdata/boxouts.csv")
-Drives <- read_csv("/Users/owensuelflow/Documents/COMP_127/NBA_STAT_R_PROJECT/projectdata/drives.csv")
-playoff_status <- read_csv("/Users/owensuelflow/Documents/COMP_127/NBA_STAT_R_PROJECT/playoff_status.csv")
-nba_advanced_data_4_Sheet1 <- read_csv("/Users/owensuelflow/Documents/COMP_127/NBA_STAT_R_PROJECT/nba advanced data-4 - Sheet1.csv")
-
-
-Hustle <- Hustle %>%
-  mutate(ScreenAssistsPTS = `ScreenAssists PTS`,
-         OffLooseBallsRecovered = `OFF Loose BallsRecovered`,
-         DefLooseBallsRecovered = `DEF Loose BallsRecovered`,
-         LooseBallsRecovered = `Loose BallsRecovered`,
-         PercLooseBallsRecoveredOff = `% Loose BallsRecovered OFF`,
-         PercLooseBallsRecoveredDef = `% Loose BallsRecovered DEF`,
-         Contested2PtShots = `Contested2PT Shots`,
-         Contested3PtShots = `Contested3PT Shots`) %>%
-  select(TEAM,
-         Min,
-         ScreenAssists,
-         ScreenAssistsPTS,
-         Deflections,
-         OffLooseBallsRecovered,
-         DefLooseBallsRecovered,
-         LooseBallsRecovered,
-         PercLooseBallsRecoveredOff,
-         PercLooseBallsRecoveredDef,
-         ChargesDrawn,
-         ContestedShots,
-         Contested2PtShots,
-         Contested3PtShots)
-Hustle <- Hustle %>% mutate(W = Drives$W)
-Boxouts <- Boxouts %>% mutate(BoxOuts = `Box Outs`,
-                   OffBoxOuts = `OFF Box Outs`,
-                   DefBoxOuts = `DEF Box Outs`,
-                   PercBoxOutsOff = `% Box Outs Off`,
-                   PercBoxOutsDef = `% Box Outs Def`,
-                   W = Drives$W) %>%
-  select(Team, Min, BoxOuts, OffBoxOuts, DefBoxOuts, PercBoxOutsOff, PercBoxOutsDef, W)
-
-Boxouts <- Boxouts %>% mutate(LooseBalls = Hustle$LooseBallsRecovered)
-Boxouts <- Boxouts %>% mutate(Playoffs = playoff_status$Playoffs)
-nba_advanced_data_4_Sheet1 <- nba_advanced_data_4_Sheet1 %>% 
-  arrange(Team)
-Boxouts <- Boxouts %>% mutate(Avg_Team_Age = nba_advanced_data_4_Sheet1$Age)
-
 ggplot(Boxouts, aes(x = BoxOuts, y = LooseBalls, color = Playoffs, size = Avg_Team_Age)) +
   geom_point() +
   geom_text(aes(label = Team), nudge_y = 0.08, size = 2, nudge_x = 0.3) +
   xlim(6.5, 11.4) + 
-  scale_color_manual(values = c("brown", "darkgoldenrod2", "chartreuse4"))
+  scale_color_manual(values = c("brown", "darkgoldenrod2", "chartreuse4")) +
+  theme_classic()
 ```
 
 ## Harry Viz 1
 
 ```{r, echo=FALSE, warning = FALSE, message=FALSE}
-nba_advanced_data4 <- nba_advanced_data3 %>% 
+nba_advanced_data5 <- nba_advanced_data_4_Sheet1 %>% 
   left_join(playoff_status) 
 
-nba_advanced_data4 %>% 
+nba_advanced_data5 %>% 
 select(Team,Age,W,Playoffs) %>% 
   ggplot(aes(x=Age,y=W))+geom_text(aes(label=Team, color = Playoffs), size=2)+geom_smooth(se=FALSE,method="gam")+xlim(21,32)+
   scale_color_manual(values = c("brown", "darkgoldenrod2" , "chartreuse4"))+
@@ -157,10 +105,7 @@ select(Team,Age,W,Playoffs) %>%
 ## Harry Viz 2
 
 ```{r, echo=FALSE, warning = FALSE, message=FALSE}
-nba_advanced_data4 <- nba_advanced_data3 %>% 
-  left_join(playoff_status) 
-
-nba_advanced_data4 %>% 
+nba_advanced_data5 %>% 
 select(Team,Age,ORtg,Playoffs) %>% 
   ggplot(aes(x=Age,y=ORtg))+geom_text(aes(label=Team, color = Playoffs), size=2)+geom_smooth(se=FALSE,method = "gam")+xlim(21,32)+
   scale_color_manual(values = c("brown", "darkgoldenrod2" , "chartreuse4"))+theme_classic()
