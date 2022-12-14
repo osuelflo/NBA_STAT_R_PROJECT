@@ -45,13 +45,15 @@ Boxouts <- Boxouts %>% mutate(Avg_Team_Age = nba_advanced_data_4_Sheet1$Age)
 
 ## Intro
 
-This report will examine NBA (National Basketball Association) play style data and roster construction to try and answer the following questions: What tendencies and characteristics do playoff teams have? What patterns begin to emerge? One thing that we had to be careful of was drawing conclusions based off of reverse causality. This concept occurs when comparing two or more variables that influence one another. For example, comparing point differential among NBA teams, meaning the difference between the average points scored and points given up, and the number of wins each team had. This would show us a clear trend of teams with a higher point differential having more wins. However, by definition a win occurs when a team scores more points than its opponent, so both of out variables in this scenario depend on each other. These are the types of conclusions we strived to avoid. 
+  When watching an NBA game as a spectator, it can often be straightforward when attempting to discern which teams are better than others. However, it can be difficult to understand what causes a team to win games and put itself above its competitors. Although the scoreboard gives fans a simple analysis of which team is better, there are many processes behind the scenes that contribute to a team's success: the general manager must construct a roster capable of winning games and the coach must develop a play-style that maximizes the talent of the players, making the team greater than the sum of its parts. This report will examine NBA (National Basketball Association) play style and roster construction to try and answer the following questions: What tendencies and characteristics do playoff teams exhibit compared to less successful teams? What patterns begin to emerge? The data for our analysis was scraped directly from NBA.com and downloarded from basketball-reference.com and pertains to the 2021-22 and 2022-23 NBA seasons. The code to acquire this data can be easily accessed in the appendix at the end of this report.
+  
+
+  One of the difficulties we encountered when exploring the data is the idea of reverse causality, or the concept that multiple statistics might influence each other when being compared. For example, comparing point differential among NBA teams, meaning the difference between the average points scored and points given up, and the number of wins each team had. This would show us a clear trend of teams with a higher point differential having more wins. However, by definition a win occurs when a team scores more points than its opponent, so both of out variables in this scenario depend on each other. These are the types of conclusions we strove to avoid. 
+
 
 The nice thing about play style in the NBA is that different teams have different philosophies regarding how they play. We wanted to look at data that showed a "choice" a team made on how to play. For example, a team can choose to take more drives during a game. On the other hand, a team could decide to avoid driving into the paint and place more of an emphasis on shooting 3 point shots. These types of data do not have reverse causality with wins. 
 
 For roster construction, the line regarding reverse causality is a bit more blurred. Teams may not have a choice between two options when building a team; depending on if a team is contending or rebuilding, they will likely have only one path to follow. However, it is still important to look at roster construction as a tool to follow how teams are doing. We can see if a team that is contending is actually where it should be, or if they should consider pivoting into a rebuild.
-
-The majority of our data was scraped directly off of NBA.com, while a few data sets were downloaded from basketball-reference.com. You can find the code used to scrape the data in the appendix at the end of this report.
 
 ## Shiny App
 
@@ -66,8 +68,37 @@ https://rstudio-connect.macalester.edu/content/ce590312-5b40-4e4c-84a9-30ff6e7b5
 ## Jonah Viz 1
 
 ```{r, echo=FALSE, warning = FALSE, message=FALSE}
+pass_touch <- Passes %>% 
+  left_join(Touches) %>% 
+  left_join(playoff_status) %>% 
+  rename("Wins" = "W")
 
+pass_touch %>% 
+  ggplot(aes(x = SecondaryAST, y = `PTS PerTouch`, color = Playoffs))+
+  geom_text(aes(label = Team), size = 1.7)+
+  scale_color_manual(values = c("brown", "darkgoldenrod2", "chartreuse4"))+
+  theme_classic()+
+  geom_abline(slope = -.03, intercept = .374, alpha = .2 )+
+  annotate(geom = "text", x = 4.5, y =.245, label = "Cutoff Line", size = 2, alpha = .2)+
+  xlim(2, 5)+
+  labs(y = "Points per Touch", x = "Secondary Assists (per Game)", title = "NBA Passing Styles and Playoff Qualification Status")
 ```
+When diving into the analysis of team play-styles, it is clear that playoff teams with a lot of success just… play better. As seen in the visualization above, teams that qualify for the playoffs or play-in tournament have higher points per touch (PPT) and more secondary assists per game. While points per touch might be correlated with a team’s scoring and therefore wins (as teams that score more points than their opponent win games), it offers more insight into a team’s play style and ability to pass the ball. Another way to view PPT is how many players touch the ball per basket made, so teams who move the ball more will have fewer PPT and those that rely heavily on isolation will have higher magnitudes. Secondary assists, which also might be known coloquially as  “hockey” assists, are the act of a player passing to the teammate which ultimately generates the assist - it is indicative of great teamwork and a team’s ability to move the ball around, thus associated with fewer points per touch. 
+	While it is not take a data scientist to explain that teams that win more basketball games play better, the manner in which teams play can be explored with the statistics above. The idea that playoff teams have consistently better PPT and more secondary assists suggests that playoff teams either specialize in their tactical strengths or are able to adapt to keep the opposing defense on its toes. The visualization below is a replica of the first play-style graph, only identifying the individual teams by their name.
+	This graph highlights difference in play-styles that are effectively captured by analysis, as an avid basketball geek could explain. The Golden State Warriors are well-known for their three-point shooting, movement off the ball, and quick passing. To no surprise, they exhibit the most secondary assists per game. Conversely, the Milwaukee Bucks have garnered respect around the league through their isolation play-style, which allows Giannis Antetokounmpo, the best player in the world, to run downhill towards the basket and decimate teams by taking on players one-by-one. Again, to no surprise, this analysis effectively captures their success in isolation, as they are second to only the Phoenix Suns in points-per-touch.
+
+```{r, echo=FALSE, warning = FALSE, message=FALSE}
+pass_touch %>% 
+  ggplot(aes(x = SecondaryAST, y = `PTS PerTouch`, color = Playoffs))+
+  geom_point(size = 3)+
+  scale_color_manual(values = c("brown", "darkgoldenrod2", "chartreuse4"))+
+  theme_classic()+
+  geom_abline(slope = -.03, intercept = .374, alpha = .2 )+
+  annotate(geom = "text", x = 4.5, y =.245, label = "Cutoff Line", size = 2, alpha = .2)+
+  xlim(2, 5)+
+  labs(y = "Points per Touch", x = "Secondary Assists (per Game)", title = "NBA Passing Styles and Playoff Qualification Status")
+```
+
 
 ## Jonah Viz 2
 
@@ -83,10 +114,11 @@ Transitions %>%
   annotate(geom = "text", x = 17.5, y = 1.138, label = "Cutoff Line", size = 2, alpha = .2)+
   labs(y = "Points Per Play", x = "Transition Frequency", title = "Transition Frequency, Efficiency, and Playoff Status")
 ```
-
+  Another analysis that might explain the difference between poor and great teams in the NBA is taking closer look at a team’s ability to convert buckets in transition. After forcing a turnover, basketball teams often foam at the mouth for an open opportunity down the court, quickly exploiting the space left open in transition. However, there does not seem to be any sort of pattern in the frequency of which teams try to push the ball in transition, as there are playoff teams that do not like to run in transition and teams that do. Fortunately, there is one key finding – good teams are efficient in transition. Despite differences in transition frequency, playoff teams and teams that make the play-in tournament are exceptional at capitalizing on the fast break with higher transition points-per-play, punishing opponents for giving them an opportunity to score easy points.
+  
 ## Owen Viz 1
 
-While there is not a correlation between having lots of transition opportunities and winning, there are other hustle-related statistics that do show a positive correlation to winning. The visualization below shows that playoff/play-in teams tend to win more loose balls and execute more box outs per game than teams who did not make the playoffs. Another interesting trend that we noticed was that a lot of the teams that performed well in these statistics were older. The Miami Heat, for example are one of the oldest teams in the NBA, yet they led the league in box outs. This trend shows up throughout the plot. It could be because older teams are more experienced and generally of higher quality, as we will show later on. These teams know what it takes to win, and oftentimes that means honing in on the smaller details of the games. On the flip side, younger teams generally lose more games, and they aren't disciplined enough to hustle after loose balls or get a body on somebody and get a rebound. Furthermore, these young teams don't have the chemistry and team culture like a team such as the Miami Heat. Overall, it is clear that winning teams prioritize hustle and sound defense, and that experienced teams know these things are crucial to win games in the NBA.
+  While there is not a correlation between having lots of transition opportunities and winning, there are other hustle-related statistics that do show a positive correlation to winning. The visualization below shows that playoff/play-in teams tend to win more loose balls and execute more box outs per game than teams who did not make the playoffs. Another interesting trend that we noticed was that a lot of the teams that performed well in these statistics were older. The Miami Heat, for example are one of the oldest teams in the NBA, yet they led the league in box outs. This trend shows up throughout the plot. It could be because older teams are more experienced and generally of higher quality, as we will show later on. These teams know what it takes to win, and oftentimes that means honing in on the smaller details of the games. On the flip side, younger teams generally lose more games, and they aren't disciplined enough to hustle after loose balls or get a body on somebody and get a rebound. Furthermore, these young teams don't have the chemistry and team culture like a team such as the Miami Heat. Overall, it is clear that winning teams prioritize hustle and sound defense, and that experienced teams know these things are crucial to win games in the NBA.
 
 ```{r, echo=FALSE, warning = FALSE, message=FALSE}
 ggplot(Boxouts, aes(x = BoxOuts, y = LooseBalls, color = Playoffs, size = Avg_Team_Age)) +
