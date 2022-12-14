@@ -135,7 +135,8 @@ ggplot(Boxouts, aes(x = BoxOuts, y = LooseBalls, color = Playoffs, size = Avg_Te
 
 ## Harry Viz 1
 
-INCLUDE: Context of data harry used
+For the next two plots, data was downloaded from basketball-reference.com, a leading NBA statistics site that has lots of useful data for answering our research question.
+
 
 ```{r, echo=FALSE, warning = FALSE, message=FALSE}
 nba_advanced_data5 <- nba_advanced_data_4_Sheet1 %>% 
@@ -148,9 +149,15 @@ select(Team,Age,W,Playoffs) %>%
   theme_classic()
 ```
 
+
+The manner in which an NBA team constructs its roster is very important to its performance. The average age of NBA players across the league is about 26 years old. However, the average age of teams ranges from 22 to 30 years old, which is 8 years of difference. From this graph, it can be seen that the older an average age of a team gets, the more wins it gets. The reason is because the younger teams lack experience: they have only entered the NBA for only a few years and have played fewer games compared to older players. 
+Take the Oklahoma City Thunder for example: the Thunder have traded a lot of their older players and are currently undergoing a rebuild, hoping to replenish their talent in the draft. Because of this, their team is younger and unaccustomed to the NBA’s physicality and pace, and their immaturity might restrict chemistry with their teammates. A standout in this visualization is the Memphis Grizzlies, which is a very young team with an average age of about 24 years old but with the second most wins in the NBA. Even though it's a young team, their players, such as Ja Morant, have leadership qualities that enhance their ability to work together. We can tell that the Grizzlies have much potential and would be a strong contender for the championship for the years to come.
+The best age range for NBA teams is between 25-30 years old. The teams that are in this age range have already played in several NBA seasons and are well-experienced. Let’s take a look at the Golden State Warriors. Although the Warriors’ average age is about 28 years old, players in the team such as Stephen Curry and Draymond Green have played in the NBA for 10+ years. They are perennial winners that have encountered many different circumstances. They have already developed good chemistry through many years as teammates, developing a championship pedigree. This is the reason why they are always championship contenders in the past few years. 
+An outlier in this graph is the LA Lakers, which contains players of an average age of about 31 years old but didn’t win half of their games played or made the playoffs. It is probably because they performed bad trades during the offseason that messed up their chemistry while crucial players such as Lebron James and Anthony Davis got injured. The Lakers supposedly could get better next year when their injured players recover and are available to play after developing improved chemistry.
+
+
 ## Harry Viz 2
 
-INCLUDE: Context of data harry used
 
 ```{r, echo=FALSE, warning = FALSE, message=FALSE}
 nba_advanced_data5 %>% 
@@ -158,6 +165,10 @@ select(Team,Age,ORtg,Playoffs) %>%
   ggplot(aes(x=Age,y=ORtg))+geom_text(aes(label=Team, color = Playoffs), size=2)+geom_smooth(se=FALSE,method = "gam")+xlim(21,32)+
   scale_color_manual(values = c("brown", "darkgoldenrod2" , "chartreuse4"))+theme_classic()
 ```
+
+
+Offense is also very important in the game of basketball and can be affected by a team’s age. In the NBA, the offensive rating of a team is known as ORtg, which means the points scored by a team per 100 possessions. As shown in the graph, the ORtg is lowest when the average age of a team is youngest then it will rise linearly to its peak of 28 years old then it will start to fall a bit. The reason behind this is really similar to why teams of ages 25-29 are more likely to win more matches than younger teams who are under 25. The team that contained younger players didn’t have much chemistry between each other and was not accustomed to the NBA playstyle. Many of them were famous high school prospects that are very confident in themselves, underestimating the learning curve that comes with entering the NBA. Because of this, ball hogging occurs and it might cause bad shot selection or force unnecessary turnovers, eventually lowering their team’s scoring efficiency. On the other hand, the Golden State Warriors are again a great example of an experienced team thriving. The Warriors consist of highly experienced players that commit to their coaches’ plays for better efficiency. The Warriors are the team with the most passes and most pick-and-rolls in the entire NBA, and with the elite shooters on their roster, their offense can always run smoothly and contains high efficiency.
+
 
 ## Ethan Viz 1
 
