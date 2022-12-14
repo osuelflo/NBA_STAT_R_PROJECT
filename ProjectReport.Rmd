@@ -43,7 +43,7 @@ Boxouts <- Boxouts %>% mutate(Avg_Team_Age = nba_advanced_data_4_Sheet1$Age)
 ```
 
 
-## Intro
+## Introduction
 
   When watching an NBA game as a spectator, it can often be straightforward when attempting to discern which teams are better than others. However, it can be difficult to understand what causes a team to win games and put itself above its competitors. Although the scoreboard gives fans a simple analysis of which team is better, there are many processes behind the scenes that contribute to a team's success: the general manager must construct a roster capable of winning games and the coach must develop a play-style that maximizes the talent of the players, making the team greater than the sum of its parts. This report will examine NBA (National Basketball Association) play style and roster construction to try and answer the following questions: What tendencies and characteristics do playoff teams exhibit compared to less successful teams? What patterns begin to emerge? The data for our analysis was scraped directly from NBA.com and downloarded from basketball-reference.com and pertains to the 2021-22 and 2022-23 NBA seasons. The code to acquire this data can be easily accessed in the appendix at the end of this report.
   
@@ -65,7 +65,7 @@ We were able to choose which data set to look at, and then choose a variable to 
 
 https://rstudio-connect.macalester.edu/content/ce590312-5b40-4e4c-84a9-30ff6e7b5a56
 
-## Jonah Viz 1
+## Playstyle Analysis
 
 ```{r, echo=FALSE, warning = FALSE, message=FALSE}
 pass_touch <- Passes %>% 
@@ -102,7 +102,6 @@ pass_touch %>%
 ```
 
 
-## Jonah Viz 2
 
 ```{r, echo=FALSE, warning = FALSE, message=FALSE}
 Transitions %>% 
@@ -120,8 +119,8 @@ Transitions %>%
 
 Another analysis that might explain the difference between poor and great teams in the NBA is taking closer look at a team’s ability to convert buckets in transition. After forcing a turnover, basketball teams often foam at the mouth for an open opportunity down the court, quickly exploiting the space left open in transition. However, there does not seem to be any sort of pattern in the frequency of which teams try to push the ball in transition, as there are playoff teams that do not like to run in transition and teams that do. Fortunately, there is one key finding – good teams are efficient in transition. Despite differences in transition frequency, playoff teams and teams that make the play-in tournament are exceptional at capitalizing on the fast break with higher transition points-per-play, punishing opponents for giving them an opportunity to score easy points.
   
-## Owen Viz 1
 
+ 
   While there is not a correlation between having lots of transition opportunities and winning, there are other hustle-related statistics that do show a positive correlation to winning. The visualization below shows that playoff/play-in teams tend to win more loose balls and execute more box outs per game than teams who did not make the playoffs. Another interesting trend that we noticed was that a lot of the teams that performed well in these statistics were older. The Miami Heat, for example are one of the oldest teams in the NBA, yet they led the league in box outs. This trend shows up throughout the plot. It could be because older teams are more experienced and generally of higher quality, as we will show later on. These teams know what it takes to win, and oftentimes that means honing in on the smaller details of the games. On the flip side, younger teams generally lose more games, and they aren't disciplined enough to hustle after loose balls or get a body on somebody and get a rebound. Furthermore, these young teams don't have the chemistry and team culture like a team such as the Miami Heat. Overall, it is clear that winning teams prioritize hustle and sound defense, and that experienced teams know these things are crucial to win games in the NBA.
 
 ```{r, echo=FALSE, warning = FALSE, message=FALSE}
@@ -133,7 +132,7 @@ ggplot(Boxouts, aes(x = BoxOuts, y = LooseBalls, color = Playoffs, size = Avg_Te
   theme_classic()
 ```
 
-## Harry Viz 1
+## Roster Contstruction
 
 For the next two plots, data was downloaded from basketball-reference.com, a leading NBA statistics site that has lots of useful data for answering our research question.
 
@@ -156,7 +155,6 @@ The best age range for NBA teams is between 25-30 years old. The teams that are 
 An outlier in this graph is the LA Lakers, which contains players of an average age of about 31 years old but didn’t win half of their games played or made the playoffs. It is probably because they performed bad trades during the offseason that messed up their chemistry while crucial players such as Lebron James and Anthony Davis got injured. The Lakers supposedly could get better next year when their injured players recover and are available to play after developing improved chemistry.
 
 
-## Harry Viz 2
 
 
 ```{r, echo=FALSE, warning = FALSE, message=FALSE}
