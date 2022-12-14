@@ -7,7 +7,17 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(readr)
+library(dplyr)
+library(tidyselect)
 library(tidyverse)
+library(lubridate)
+library(rvest)
+library(stringr)
+library(scales)
+library(plotly)
+library(rpart)
+library(rpart.plot)
 library(ggplot2)
 ```
 
@@ -24,6 +34,18 @@ PnR_Roller <- read_csv("/Users/owensuelflow/Documents/COMP_127/NBA_STAT_R_PROJEC
 Transitions <- read_csv("/Users/owensuelflow/Documents/COMP_127/NBA_STAT_R_PROJECT/projectdata/transitions.csv")
 Salary <- read_csv("/Users/owensuelflow/Downloads/IndividualTeamsdata.csv")
 Touches <- read_csv("/Users/owensuelflow/Documents/COMP_127/NBA_STAT_R_PROJECT/projectdata/touches.csv")
+CurrentContractData <- read_csv("/Users/owensuelflow/Documents/COMP_127/NBA_STAT_R_PROJECT/projectdata/2023contract.txt")
+CurrentPlayerData <- read_csv("/Users/owensuelflow/Documents/COMP_127/NBA_STAT_R_PROJECT/projectdata/2023bball.txt")
+PastPlayerData <-read_csv("/Users/owensuelflow/Documents/COMP_127/NBA_STAT_R_PROJECT/projectdata/2022bball.txt")
+NBArookies <- read_csv("/Users/owensuelflow/Documents/COMP_127/NBA_STAT_R_PROJECT/projectdata/NBArookies.txt")
+TeamRank <- read_csv("/Users/owensuelflow/Documents/COMP_127/NBA_STAT_R_PROJECT/projectdata/TeamRank.txt") %>% rename(Win=W)
+Current_Team_Rank <- read_csv("/Users/owensuelflow/Documents/COMP_127/NBA_STAT_R_PROJECT/projectdata/Current Team Rank.txt") %>%
+  select(-Rk)
+CurrentContractData <- read_csv("/Users/owensuelflow/Documents/COMP_127/NBA_STAT_R_PROJECT/projectdata/2023contract.txt")
+abb_team <- read_delim("/Users/owensuelflow/Documents/COMP_127/NBA_STAT_R_PROJECT/projectdata/abb-team.txt", 
+    delim = "-", escape_double = FALSE, col_names = FALSE,
+    trim_ws = TRUE)
+
 
 
 
@@ -89,19 +111,6 @@ When diving into the analysis of team play-styles, it is clear that playoff team
 	While it is not take a data scientist to explain that teams that win more basketball games play better, the manner in which teams play can be explored with the statistics above. The idea that playoff teams have consistently better PPT and more secondary assists suggests that playoff teams either specialize in their tactical strengths or are able to adapt to keep the opposing defense on its toes. The visualization below is a replica of the first play-style graph, only identifying the individual teams by their name.
 	This graph highlights difference in play-styles that are effectively captured by analysis, as an avid basketball geek could explain. The Golden State Warriors are well-known for their three-point shooting, movement off the ball, and quick passing. To no surprise, they exhibit the most secondary assists per game. Conversely, the Milwaukee Bucks have garnered respect around the league through their isolation play-style, which allows Giannis Antetokounmpo, the best player in the world, to run downhill towards the basket and decimate teams by taking on players one-by-one. Again, to no surprise, this analysis effectively captures their success in isolation, as they are second to only the Phoenix Suns in points-per-touch.
 
-```{r, echo=FALSE, warning = FALSE, message=FALSE}
-pass_touch %>% 
-  ggplot(aes(x = SecondaryAST, y = `PTS PerTouch`, color = Playoffs))+
-  geom_point(size = 3)+
-  scale_color_manual(values = c("brown", "darkgoldenrod2", "chartreuse4"))+
-  theme_classic()+
-  geom_abline(slope = -.03, intercept = .374, alpha = .2 )+
-  annotate(geom = "text", x = 4.5, y =.245, label = "Cutoff Line", size = 2, alpha = .2)+
-  xlim(2, 5)+
-  labs(y = "Points per Touch", x = "Secondary Assists (per Game)", title = "NBA Passing Styles and Playoff Qualification Status")
-```
-
-
 
 ```{r, echo=FALSE, warning = FALSE, message=FALSE}
 Transitions %>% 
@@ -129,6 +138,7 @@ ggplot(Boxouts, aes(x = BoxOuts, y = LooseBalls, color = Playoffs, size = Avg_Te
   geom_text(aes(label = Team), nudge_y = 0.08, size = 2, nudge_x = 0.3) +
   xlim(6.5, 11.4) + 
   scale_color_manual(values = c("brown", "darkgoldenrod2", "chartreuse4")) +
+  labs(x = "Boxouts", y = "Loose Balls Won", title = "Winning Teams Focus on Smaller Details to Gain an Edge", subtitle = "These teams are experienced and know what it takes to win") + 
   theme_classic()
 ```
 
@@ -145,6 +155,7 @@ nba_advanced_data5 %>%
 select(Team,Age,W,Playoffs) %>% 
   ggplot(aes(x=Age,y=W))+geom_text(aes(label=Team, color = Playoffs), size=2)+geom_smooth(se=FALSE,method="gam")+xlim(21,32)+
   scale_color_manual(values = c("brown", "darkgoldenrod2" , "chartreuse4"))+
+  labs(y="wins")+ggtitle("Average age of each team to their wins") +
   theme_classic()
 ```
 
@@ -161,7 +172,9 @@ An outlier in this graph is the LA Lakers, which contains players of an average 
 nba_advanced_data5 %>% 
 select(Team,Age,ORtg,Playoffs) %>% 
   ggplot(aes(x=Age,y=ORtg))+geom_text(aes(label=Team, color = Playoffs), size=2)+geom_smooth(se=FALSE,method = "gam")+xlim(21,32)+
-  scale_color_manual(values = c("brown", "darkgoldenrod2" , "chartreuse4"))+theme_classic()
+  scale_color_manual(values = c("brown", "darkgoldenrod2" , "chartreuse4"))+
+  labs(y="Offensive rating")+ggtitle("Average age of each team to their offensive rating") +
+theme_classic()
 ```
 
 
